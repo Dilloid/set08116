@@ -28,15 +28,15 @@ void create_sierpinski(geometry &geom) {
   for (auto i = 1; i < num_points; ++i) {
     // *********************************
     // Add random point
-
+    auto random_num = dist(e);
     // Add colour - all points red
-
+    
     // *********************************
   }
   // *********************************
   // Add buffers to geometry
-
-
+  geom.add_buffer(points, BUFFER_INDEXES::POSITION_BUFFER);
+  geom.add_buffer(colours, BUFFER_INDEXES::COLOUR_BUFFER);
   // *********************************
 }
 

@@ -50,9 +50,16 @@ bool update(float delta_time) {
 bool render() {
   // Bind effect
   renderer::bind(eff);
-  mat4 S;
+  mat4 S = glm::mat4(1.0f);
   // *********************************
   // Create scale matrix - use uniform scale based on s
+
+  //S[0] = glm::vec4(s, 0, 0, 0);
+  //S[1] = glm::vec4(0, s, 0, 0);
+  //S[2] = glm::vec4(0, 0, s, 0);
+  //S[3] = glm::vec4(0, 0, 0, 1);
+
+  S = glm::scale(S, vec3(s, s, s));
 
   // *********************************
   // Create MVP matrix

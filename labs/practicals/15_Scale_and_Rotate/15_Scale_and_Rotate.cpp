@@ -58,7 +58,17 @@ bool render() {
   // Create rotation matrix and scale matrix
   // Set M to be the combination of scale and rotation - make sure you have the correct order
 
+  S[0] = glm::vec4(s, 0, 0, 0);
+  S[1] = glm::vec4(0, s, 0, 0);
+  S[2] = glm::vec4(0, 0, s, 0);
+  S[3] = glm::vec4(0, 0, 0, 1);
 
+  R[0] = glm::vec4(cos(theta), -sin(theta), 0.0f, 0.0f);
+  R[1] = glm::vec4(sin(theta), cos(theta), 0.0f, 0.0f);
+  R[2] = glm::vec4(0, 0, 1, 0);
+  R[3] = glm::vec4(0, 0, 0, 1);
+
+  M = glm::mat4(1.0f) * (R * S);
 
   // *********************************
   // Create MVP matrix

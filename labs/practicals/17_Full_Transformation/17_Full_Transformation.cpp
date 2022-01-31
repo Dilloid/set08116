@@ -70,14 +70,21 @@ bool update(float delta_time) {
 bool render() {
   // Bind effect
   renderer::bind(eff);
-  mat4 T, R, S, M;
+  mat4 T = glm::mat4(1.0f);
+  mat4 R = glm::mat4(1.0f);
+  mat4 S = glm::mat4(1.0f);
+  mat4 M = glm::mat4(1.0f);
   // *********************************
   // Create transformation matrices
   // ******************************
 
-
+  T = glm::translate(T, pos);
+  R = glm::rotate(R, theta, vec3(0, 0, 1));
+  S = glm::scale(S, vec3(s, s, s));
 
   // Combine matrices to set M - remember multiplication order
+
+  M = T * (R * S);
 
   // *********************************
   // Create MVP matrix
