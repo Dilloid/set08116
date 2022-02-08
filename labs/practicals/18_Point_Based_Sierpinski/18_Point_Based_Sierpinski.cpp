@@ -15,7 +15,11 @@ void create_sierpinski(geometry &geom) {
   vector<vec3> points;
   vector<vec4> colours;
   // Three corners of the triangle
-  array<vec3, 3> v = {vec3(-1.0f, -1.0f, 0.0f), vec3(0.0f, 1.0f, 0.0f), vec3(1.0f, -1.0f, 0.0f)};
+  array<vec3, 3> v = {
+      vec3(-1.0f, -1.0f, 0.0f),
+      vec3(0.0f, 1.0f, 0.0f),
+      vec3(1.0f, -1.0f, 0.0f)
+  };
   // Create random engine - generates random numbers
   default_random_engine e;
   // Create a distribution.  3 points in array so want 0-2
@@ -29,8 +33,9 @@ void create_sierpinski(geometry &geom) {
     // *********************************
     // Add random point
     auto random_num = dist(e);
+    points.push_back((points[i - 1] + v[random_num]) / 2.0f);
     // Add colour - all points red
-    
+    colours.push_back(colours[0]);
     // *********************************
   }
   // *********************************

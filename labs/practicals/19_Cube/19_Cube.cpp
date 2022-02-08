@@ -11,6 +11,16 @@ target_camera cam;
 float theta = 0.0f;
 float rho = 0.0f;
 
+vec3
+v1 = vec3(-1, 1, 1),
+v2 = vec3(-1, -1, 1),
+v3 = vec3(1, -1, 1),
+v4 = vec3(1, 1, 1),
+v5 = vec3(1, 1, -1),
+v6 = vec3(-1, 1, -1),
+v7 = vec3(-1, -1, -1),
+v8 = vec3(1, -1, -1);
+
 bool load_content() {
   // Create cube data - twelve triangles triangles
   // Positions
@@ -18,23 +28,23 @@ bool load_content() {
       // *********************************
       // Add the position data for triangles here, (6 verts per side)
       // Front
-
-
+      v3, v4, v1,
+      v1, v2, v3,
       // Back
-
-
+      v5, v8, v7,
+      v7, v6, v5,
       // Right
-
-
+      v5, v4, v3,
+      v3, v8, v5,
       // Left
-
-
+      v1, v6, v7,
+      v7, v2, v1,
       // Top
-
-
+      v1, v4, v5,
+      v5, v6, v1,
       // Bottom
-
-
+      v3, v2, v7,
+      v7, v8, v3,
       // *********************************
   };
   // Colours

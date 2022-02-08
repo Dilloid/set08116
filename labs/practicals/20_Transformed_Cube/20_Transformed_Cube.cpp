@@ -13,6 +13,16 @@ float rho = 0.0f;
 vec3 pos(0.0f, 0.0f, 0.0f);
 float s = 1.0f;
 
+vec3
+v1 = vec3(-1, 1, 1),
+v2 = vec3(-1, -1, 1),
+v3 = vec3(1, -1, 1),
+v4 = vec3(1, 1, 1),
+v5 = vec3(1, 1, -1),
+v6 = vec3(-1, 1, -1),
+v7 = vec3(-1, -1, -1),
+v8 = vec3(1, -1, -1);
+
 bool load_content() {
   // Create cube data - twelve triangles triangles
   // Positions
@@ -20,23 +30,23 @@ bool load_content() {
       // *********************************
       // Add the position data for triangles here, (6 verts per side)
       // Front
-
-
+      v2, v3, v1,
+      v1, v3, v4,
       // Back
-
-
+      v8, v7, v5,
+      v5, v7, v6,
       // Right
-
-
+      v3, v8, v4,
+      v4, v8, v5,
       // Left
-
-
+      v7, v2, v6,
+      v6, v2, v1,
       // Top
-
-
+      v1, v4, v6,
+      v6, v4, v5,
       // Bottom
-
-
+      v7, v8, v2,
+      v2, v8, v3,
       // *********************************
   };
   // Colours
@@ -68,36 +78,40 @@ bool update(float delta_time) {
   // WSAD - movement
   // Arrow Keys - rotation
   // O decrease scale, P increase scale
+  
+  // Check if key is pressed
+  if (glfwGetKey(renderer::get_window(), GLFW_KEY_W)) {
+      pos -= vec3(0.0f, 0.0f, 5.0f) * delta_time;
+  }
+  if (glfwGetKey(renderer::get_window(), GLFW_KEY_S)) {
+      pos += vec3(0.0f, 0.0f, 5.0f) * delta_time;
+  }
+  if (glfwGetKey(renderer::get_window(), GLFW_KEY_A)) {
+      pos -= vec3(5.0f, 0.0f, 0.0f) * delta_time;
+  }
+  if (glfwGetKey(renderer::get_window(), GLFW_KEY_D)) {
+      pos += vec3(5.0f, 0.0f, 0.0f) * delta_time;
+  }
 
+  if (glfwGetKey(renderer::get_window(), GLFW_KEY_UP)) {
+      theta -= pi<float>() * delta_time;
+  }
+  if (glfwGetKey(renderer::get_window(), GLFW_KEY_DOWN)) {
+      theta += pi<float>() * delta_time;
+  }
+  if (glfwGetKey(renderer::get_window(), GLFW_KEY_RIGHT)) {
+      rho -= pi<float>() * delta_time;
+  }
+  if (glfwGetKey(renderer::get_window(), GLFW_KEY_LEFT)) {
+      rho += pi<float>() * delta_time;
+  }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  if (glfwGetKey(renderer::get_window(), GLFW_KEY_O)) {
+      s -= 1.0f * delta_time;
+  }
+  if (glfwGetKey(renderer::get_window(), GLFW_KEY_P)) {
+      s += 1.0f * delta_time;
+  }
   // *********************************
   // Update the camera
   cam.update(delta_time);
@@ -107,13 +121,17 @@ bool update(float delta_time) {
 bool render() {
   // Bind effect
   renderer::bind(eff);
-  mat4 T, R, S, M;
+  mat4
+  T = glm::mat4(1.0f),
+  R = glm::mat4(1.0f),
+  S = glm::mat4(1.0f),
+  M = glm::mat4(1.0f);
   // *********************************
   // Create transformation matrix
-
-
-
-
+  T = glm::translate(T, pos);
+  R = glm::eulerAngleXZ(theta, rho);
+  S = glm::scale(S, vec3(s));
+  M = T * (R * S);
   // *********************************
   // Create MVP matrix
   auto V = cam.get_view();
