@@ -6,13 +6,13 @@ using namespace graphics_framework;
 using namespace glm;
 
 mesh m;
+  geometry geom;
 effect eff;
 target_camera cam;
 #define NapierRed 0.765f, 0.082f, 0.196f
 
 bool load_content() {
   // Construct geometry object
-  geometry geom;
   // Create triangle data
   // Positions
   vector<vec3> positions{vec3(0.0f, 1.0f, 0.0f), vec3(-1.0f, -1.0f, 0.0f), vec3(1.0f, -1.0f, 0.0f)};
@@ -27,7 +27,7 @@ bool load_content() {
   eff.add_shader("26_Shaders/colour.frag", GL_FRAGMENT_SHADER);
   // *********************************
   // Build effect
-
+  eff.build();
   // *********************************
 
   // Set camera properties
@@ -60,7 +60,9 @@ bool render() {
                      value_ptr(MVP));                 // Pointer to matrix data
   // *********************************
   // Set the colour value for the shader here (Hint: rep the Brand, use the NapierRed macro)
-
+  glUniform4fv(eff.get_uniform_location("colour"),    // Location of uniform
+               1,                                     // Number of values - 1 mat4
+               value_ptr(vec4(NapierRed, 1.0f)));     // Pointer to colour data
   // *********************************
 
   // Render the mesh

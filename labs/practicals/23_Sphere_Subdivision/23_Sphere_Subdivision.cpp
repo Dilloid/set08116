@@ -13,17 +13,27 @@ float rho = 0.0f;
 
 const int subdivisions = 5;
 
+// Helper method - adds a triangle to geometry
+void triangle(const vector<vec3>& points, vector<vec3>& positions, vector<vec4>& colours) {
+   positions.insert(positions.end(), points.begin(), points.end());
+   for (auto i = 0; i < 3; ++i) {
+       colours.push_back(vec4(1.0f, 0.0f, 0.0f, 1.0f));
+   }
+}
+
 void divide_triangle(const vector<vec3> &points, int divisions, vector<vec3> &positions, vector<vec4> &colours) {
   // IF we have more divisions to do?
   if (divisions > 0) {
     // *********************************
     // Calculate new vertices to work on (Normalize each element!)
-
-
+    vec3 v0 = normalize(points[0] + points[1]);
+    vec3 v1 = normalize(points[0] + points[2]);
+    vec3 v2 = normalize(points[1] + points[2]);
     // Divide new triangles
-
-
-
+    divide_triangle({ points[0], v0, v1 }, divisions - 1, positions, colours);
+    divide_triangle({ points[2], v1, v2 }, divisions - 1, positions, colours);
+    divide_triangle({ points[1], v2, v0 }, divisions - 1, positions, colours);
+    divide_triangle({ v0, v2, v1 }, divisions - 1, positions, colours);
 
     // *********************************
   } else {
@@ -38,9 +48,21 @@ bool load_content() {
   // Required buffers
   vector<vec3> positions;
   vector<vec4> colours;
+
   // Define the initial tetrahedron - 4 points
-  vector<vec3> v{vec3(0.0f, 0.0f, 1.0f), vec3(0.0f, 0.942809f, -0.333333f), vec3(-0.816497f, -0.471405f, -0.333333f),
-                 vec3(0.816497f, -0.471405f, 0.333333f)};
+
+  // vector<vec3> v {
+  //   vec3(0.0f, 0.0f, 1.0f), vec3(0.0f, 0.942809f, -0.333333f), vec3(-0.816497f, -0.471405f, -0.333333f),
+  //   vec3(0.816497f, -0.471405f, 0.333333f)
+  // };
+
+  vector<vec3> v {
+    vec3(0.0f, 0.0f, 1.0f),
+    vec3(0.0f, 0.942809f, -0.333333f),
+    vec3(-0.816497f, -0.471405f, -0.333333f),
+    vec3(0.816497f, -0.471405f, -0.333333f)
+  };
+
   // Divide the triangles
   divide_triangle({v[0], v[1], v[2]}, subdivisions, positions, colours);
   divide_triangle({v[3], v[2], v[1]}, subdivisions, positions, colours);

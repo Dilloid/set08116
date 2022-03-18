@@ -4,6 +4,7 @@
 struct point_light {
   vec4 light_colour;
   vec3 position;
+  float range;
   float constant;
   float linear;
   float quadratic;
@@ -39,14 +40,13 @@ layout(location = 0) out vec4 colour;
 void main() {
   // *********************************
   // Get distance between point light and vertex
-
+  float d = distance(point.position, position);
   // Calculate attenuation factor
-
+  float c = (1/(point.constant + (point.linear * d) + (point.quadratic * pow(d, 2)))) * point.light_colour;
   // Calculate light colour
-
-
+  vec4 light_colour = point.light_colour * (point.range / d);
   // Calculate light dir
-
+  vec3 light_dir = normalize(point.position - position);
   // Now use standard phong shading but using calculated light colour and direction
   // - note no ambient
 

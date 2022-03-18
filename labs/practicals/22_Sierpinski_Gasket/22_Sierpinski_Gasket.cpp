@@ -15,23 +15,35 @@ void triangle(const vector<vec3> &points, vector<vec3> &positions, vector<vec4> 
   for (auto i = 0; i < 3; ++i){
     colours.push_back(vec4(1.0f, 0.0f, 0.0f, 1.0f));
   }
-
 }
 
 void divide_triangle(const vector<vec3> &points, unsigned int count, vector<vec3> &positions, vector<vec4> &colours) {
   // *********************************
   // IF we have more divisions to do?
+  if (count > 0) {
 
     // Calculate new vertices to work on
+    auto A = points[0];
+    auto B = points[1];
+    auto C = points[2];
 
-    // Divide new triangles
+    // Calculate mid points
+    auto AB = (A + B) / 2.0f;
+    auto BC = (B + C) / 2.0f;
+    auto CA = (C + A) / 2.0f;
 
+    // Divide the new triangles
+    divide_triangle({ A,AB,CA }, count - 1, positions, colours);
+    divide_triangle({ AB,B,BC }, count - 1, positions, colours);
+    divide_triangle({ CA,BC,C }, count - 1, positions, colours);
 
+  } else {
+    triangle(points, positions, colours);
 
-
-
-
-
+    for (auto i = 0; i < 3; ++i) {
+        colours.push_back(vec4(0.6f, i % 2, i % 3, 1.0f));
+    }
+  }
   // *********************************
 }
 

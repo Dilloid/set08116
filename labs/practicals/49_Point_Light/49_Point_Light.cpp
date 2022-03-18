@@ -47,40 +47,37 @@ bool load_content() {
   // - all specular is white
   // - all shininess is 25
   // Red box
+  vec4 black = vec4(0.0f, 0.0f, 0.0f, 1.0f);
+  vec4 white = vec4(1.0f, 1.0f, 1.0f, 1.0f);
+  float shininess = 25.0f;
 
-
-
-
+  // Red box
+  vec4 red = vec4(1.0f, 0.0f, 0.0f, 1.0f);
+  material mat_red = material(black, red, white, shininess);
+  meshes["box"].set_material(mat_red);
   // Green tetra
-
-
-
-
+  vec4 green = vec4(0.0f, 1.0f, 0.0f, 1.0f);
+  material mat_green = material(black, green, white, shininess);
+  meshes["tetra"].set_material(mat_green);
   // Blue pyramid
-
-
-
-
+  vec4 blue = vec4(0.0f, 0.0f, 1.0f, 1.0f);
+  material mat_blue = material(black, blue, white, shininess);
+  meshes["pyramid"].set_material(mat_blue);
   // Yellow disk
-
-
-
-
+  vec4 yellow = vec4(1.0f, 1.0f, 0.0f, 1.0f);
+  material mat_yellow = material(black, yellow, white, shininess);
+  meshes["disk"].set_material(mat_yellow);
   // Magenta cylinder
-
-
-
-
+  vec4 magenta = vec4(1.0f, 0.0f, 1.0f, 1.0f);
+  material mat_magenta = material(black, magenta, white, shininess);
+  meshes["cylinder"].set_material(mat_magenta);
   // Cyan sphere
-
-
-
-
+  vec4 cyan = vec4(0.0f, 1.0f, 1.0f, 1.0f);
+  material mat_cyan = material(black, cyan, white, shininess);
+  meshes["sphere"].set_material(mat_cyan);
   // White torus
-
-
-
-
+  material mat_white = material(black, white, white, shininess);
+  meshes["torus"].set_material(mat_white);
   // *********************************
 
   // Load texture
