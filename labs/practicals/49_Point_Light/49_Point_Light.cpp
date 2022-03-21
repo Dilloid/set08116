@@ -84,16 +84,16 @@ bool load_content() {
   tex = texture("textures/checker.png");
   // *********************************
   // Set lighting values, Position (-25, 10, -10)
-
+  light.set_position(vec3(-25, 10, -10));
   // Light colour white
-
+  light.set_light_colour(white);
   // Set range to 20
-
+  light.set_range(20);
   // Load in shaders
-
-
+  eff.add_shader("49_Point_Light/point.vert", GL_VERTEX_SHADER);
+  eff.add_shader("49_Point_Light/point.frag", GL_FRAGMENT_SHADER);
   // Build effect
-
+  eff.build();
   // *********************************
 
   // Set camera properties
@@ -106,6 +106,7 @@ bool load_content() {
 bool update(float delta_time) {
   // Range of the point light
   static float range = 20.0f;
+
   // *********************************
 
 
@@ -171,21 +172,25 @@ bool render() {
 
     // *********************************
     // Set M matrix uniform
-
+	glUniformMatrix4fv(eff.get_uniform_location("M"), 1, GL_FALSE, value_ptr(M));
     // Set N matrix uniform - remember - 3x3 matrix
+	glUniformMatrix3fv(eff.get_uniform_location("N"), 1, GL_FALSE,
+		value_ptr(m.get_transform().get_normal_matrix()));
+	// Bind material
+	renderer::bind(m.get_material(), "mat");
+	// Bind light
+	renderer::bind(light, "point");
+	// Bind texture
+	renderer::bind(tex, 0);
+	// Set tex uniform
+	glUniform1i(eff.get_uniform_location("tex"), 0);
+	// Set eye position - Get this from active camera
+	glUniform3fv(eff.get_uniform_location("eye_pos"), 1,
+		value_ptr(cam.get_position()));
 
-    // Bind material
-
-    // Bind light
-
-    // Bind texture
-
-    // Set tex uniform
-
-    // Set eye position- Get this from active camera
-
+	glUniform1f(eff.get_uniform_location("range"), 20);
     // Render mesh
-
+	renderer::render(m);
     // *********************************
   }
 

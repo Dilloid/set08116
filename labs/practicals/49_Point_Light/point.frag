@@ -4,7 +4,6 @@
 struct point_light {
   vec4 light_colour;
   vec3 position;
-  float range;
   float constant;
   float linear;
   float quadratic;
@@ -26,6 +25,8 @@ uniform material mat;
 uniform vec3 eye_pos;
 // Texture
 uniform sampler2D tex;
+// Range
+uniform float range;
 
 // Incoming position
 layout(location = 0) in vec3 position;
@@ -39,23 +40,43 @@ layout(location = 0) out vec4 colour;
 
 void main() {
   // *********************************
+  
   // Get distance between point light and vertex
   float d = distance(point.position, position);
+  
   // Calculate attenuation factor
-  float c = (1/(point.constant + (point.linear * d) + (point.quadratic * pow(d, 2)))) * point.light_colour;
+  vec4 c = (1 / (point.constant + (point.linear * d) + (point.quadratic * pow(d, 2)))) * point.light_colour;
+  
   // Calculate light colour
-  vec4 light_colour = point.light_colour * (point.range / d);
+  vec4 light_colour = (point.light_colour * (range / d)) * c;
+  
   // Calculate light dir
   vec3 light_dir = normalize(point.position - position);
+
   // Now use standard phong shading but using calculated light colour and direction
   // - note no ambient
 
+  // Calculate diffuse component
+  vec4 diffuse = max(dot(normal, light_dir), 0) * (mat.diffuse_reflection * light_colour);
 
+  // Calculate view direction
+  vec3 view_dir = normalize(eye_pos - position);
 
+  // Calculate half vector
+  vec3 h = normalize(light_dir + view_dir);
 
+  // Calculate specular component
+  vec4 specular = pow(max(dot(normal, h), 0), mat.shininess) * (mat.specular_reflection * light_colour);
+  
+  // Sample texture
+  vec4 tex_colour = texture(tex, tex_coord);
 
+  // Calculate primary colour component
+  vec4 primary = mat.emissive + diffuse;
 
-
+  // Calculate final colour - remember alpha
+  colour = primary * tex_colour + specular;
+  colour.a = 1.0f;
 
   // *********************************
 }
