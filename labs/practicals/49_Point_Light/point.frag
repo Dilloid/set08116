@@ -25,8 +25,6 @@ uniform material mat;
 uniform vec3 eye_pos;
 // Texture
 uniform sampler2D tex;
-// Range
-uniform float range;
 
 // Incoming position
 layout(location = 0) in vec3 position;
@@ -45,10 +43,10 @@ void main() {
   float d = distance(point.position, position);
   
   // Calculate attenuation factor
-  vec4 c = (1 / (point.constant + (point.linear * d) + (point.quadratic * pow(d, 2)))) * point.light_colour;
+  float a = (1 / (point.constant + (point.linear * d) + (point.quadratic * pow(d, 2))));
   
   // Calculate light colour
-  vec4 light_colour = (point.light_colour * (range / d)) * c;
+  vec4 light_colour = point.light_colour * a;
   
   // Calculate light dir
   vec3 light_dir = normalize(point.position - position);

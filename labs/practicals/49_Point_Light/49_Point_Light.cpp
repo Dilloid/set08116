@@ -46,7 +46,6 @@ bool load_content() {
   // - all emissive is black
   // - all specular is white
   // - all shininess is 25
-  // Red box
   vec4 black = vec4(0.0f, 0.0f, 0.0f, 1.0f);
   vec4 white = vec4(1.0f, 1.0f, 1.0f, 1.0f);
   float shininess = 25.0f;
@@ -82,6 +81,7 @@ bool load_content() {
 
   // Load texture
   tex = texture("textures/checker.png");
+
   // *********************************
   // Set lighting values, Position (-25, 10, -10)
   light.set_position(vec3(-25, 10, -10));
@@ -109,38 +109,35 @@ bool update(float delta_time) {
 
   // *********************************
 
-
-
-
-
-
-
-
-
-
-
-
   // WSAD to move point light
+  vec3 translation = vec3(0.0f, 0.0f, 0.0f);
 
-
-
-
-
-
-
-
-
-
-
+  if (glfwGetKey(renderer::get_window(), GLFW_KEY_W)) {
+      translation.z -= 1.0f;
+  }
+  if (glfwGetKey(renderer::get_window(), GLFW_KEY_S)) {
+      translation.z += 1.0f;
+  }
+  if (glfwGetKey(renderer::get_window(), GLFW_KEY_A)) {
+      translation.x -= 1.0f;
+  }
+  if (glfwGetKey(renderer::get_window(), GLFW_KEY_D)) {
+      translation.x += 1.0f;
+  }
 
   // O and P to change range
+  if (glfwGetKey(renderer::get_window(), GLFW_KEY_O)) {
+      range -= 1.0f;
+  }
+  if (glfwGetKey(renderer::get_window(), GLFW_KEY_P)) {
+      range += 1.0f;
+  }
 
-
-
-
-
-
+  if (range < 0) range = 0;
   // *********************************
+
+  // Move point light
+  light.move(translation);
 
   // Set range
   light.set_range(range);
@@ -187,8 +184,6 @@ bool render() {
 	// Set eye position - Get this from active camera
 	glUniform3fv(eff.get_uniform_location("eye_pos"), 1,
 		value_ptr(cam.get_position()));
-
-	glUniform1f(eff.get_uniform_location("range"), 20);
     // Render mesh
 	renderer::render(m);
     // *********************************
