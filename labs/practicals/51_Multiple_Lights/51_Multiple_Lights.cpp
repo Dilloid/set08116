@@ -197,6 +197,7 @@ bool render() {
                        1,                               // Number of values - 1 mat4
                        GL_FALSE,                        // Transpose the matrix?
                        value_ptr(MVP));                 // Pointer to matrix data
+
     // *********************************
     // Set M matrix uniform
     glUniformMatrix4fv(eff.get_uniform_location("M"), 1, GL_FALSE, value_ptr(M));
@@ -206,11 +207,9 @@ bool render() {
     // Bind material
     renderer::bind(m.get_material(), "mat");
     // Bind point lights
-    for (int i = 0; i < points.size(); i++)
-      renderer::bind(points[i], "points[" + to_string(i) + "]");
+    renderer::bind(points, "points");
     // Bind spot lights
-    for (int i = 0; i < spots.size(); i++)
-      renderer::bind(spots[i], "spots[" + to_string(i) + "]");
+    renderer::bind(spots, "spots");
     // Bind texture
     renderer::bind(tex, 0);
     // Set tex uniform
@@ -220,6 +219,7 @@ bool render() {
         value_ptr(cam.get_position()));
     // Render mesh
     renderer::render(m);
+
     // *********************************
   }
 

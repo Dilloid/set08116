@@ -23,8 +23,7 @@ struct material {
 #endif
 
 // Forward declarations of used functions
-vec4 calculate_direction(in directional_light light, in material mat, in vec3 normal, in vec3 view_dir,
-                         in vec4 tex_colour);
+vec4 calculate_direction(in directional_light light, in material mat, in vec3 normal, in vec3 view_dir, in vec4 tex_colour);
 vec3 calc_normal(in vec3 normal, in vec3 tangent, in vec3 binormal, in sampler2D normal_map, in vec2 tex_coord);
 
 // Direction light being used in the scene
@@ -55,12 +54,12 @@ layout(location = 0) out vec4 colour;
 void main() {
   // *********************************
   // Sample texture
-
+  vec4 tex_colour = texture(tex, tex_coord);
   // Calculate view direction
-
+  vec3 view_dir = normalize(eye_pos - position);
   // Calculate normal from normal map
-
+  vec3 normal = calc_normal(normal, tangent, binormal, normal_map, tex_coord);
   // Calculate directional light
-
+  colour += calculate_direction(light, mat, normal, view_dir, tex_colour);
   // *********************************
 }

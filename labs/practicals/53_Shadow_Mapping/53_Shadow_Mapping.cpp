@@ -15,31 +15,34 @@ shadow_map shadow;
 bool load_content() {
   // *********************************
   // Create shadow map- use screen size
-
+  shadow = shadow_map(
+      renderer::get_screen_width(),
+      renderer::get_screen_height()
+  );
   // Create plane mesh
-
+  meshes["plane"] = mesh(geometry_builder::create_plane());
   // Create "teapot" mesh by loading in models/teapot.obj
-
+  meshes["teapot"] = mesh(geometry("models/teapot.obj"));
   // Need to rotate the teapot on x by negative pi/2
-
+  meshes["teapot"].get_transform().rotate(vec3(-pi<float>() / 2, 0.0f, 0.0f));
   // Scale the teapot - (0.1, 0.1, 0.1)
-
+  meshes["teapot"].get_transform().scale = vec3(0.1f, 0.1f, 0.1f);
   // ***********************
   // Set materials
   // - all emissive is black
   // - all specular is white
   // - all shininess is 25
   // ***********************
+  vec4 black = vec4(0.0f, 0.0f, 0.0f, 1.0f);
+  vec4 white = vec4(1.0f, 1.0f, 1.0f, 1.0f);
+  float shininess = 25.0f;
   // White plane
-
-
-
-
+  material mat_white = material(black, white, white, shininess);
+  meshes["plane"].set_material(mat_white);
   // Red teapot
-
-
-
-
+  vec4 red = vec4(1.0f, 0.0f, 0.0f, 1.0f);
+  material mat_red = material(black, red, white, shininess);
+  meshes["teapot"].set_material(mat_red);
   // *********************************
 
   // Set spot properties
@@ -71,9 +74,9 @@ bool update(float delta_time) {
 
   // *********************************
   // Update the shadow map light_position from the spot light
-
+  shadow.light_position = spot.get_position();
   // do the same for light_dir property
-
+  shadow.light_dir = spot.get_direction();
   // *********************************
 
   // Press s to save
@@ -89,11 +92,11 @@ bool update(float delta_time) {
 bool render() {
   // *********************************
   // Set render target to shadow map
-
+  renderer::set_render_target(shadow);
   // Clear depth buffer bit
-
+  glClear(GL_DEPTH_BUFFER_BIT);
   // Set face cull mode to front
-
+  glCullFace(GL_FRONT);
   // *********************************
 
   // Bind shader
@@ -106,7 +109,7 @@ bool render() {
     auto M = m.get_transform().get_transform_matrix();
     // *********************************
     // View matrix taken from shadow map
-
+    auto V = shadow.get_view();
     // *********************************
 
     auto P = cam.get_projection();
@@ -119,9 +122,9 @@ bool render() {
 
   // *********************************
   // Set render target back to the screen
-
+  renderer::set_render_target();
   // Set face cull mode to back
-
+  glCullFace(GL_BACK);
   // *********************************
 
   return true;

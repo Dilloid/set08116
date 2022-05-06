@@ -41,8 +41,8 @@ void main() {
 
   // *********************************
   // Transform tangent
-
+  tangent_out = normalize(N * tangent);
   // Transform binormal
-
+  binormal_out = normalize(N * binormal);
   // *********************************
 }

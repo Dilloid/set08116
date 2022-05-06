@@ -24,10 +24,10 @@ struct material {
 #endif
 
 // Forward declarations
-vec4 calculate_direction(in directional_light light, in material mat, in vec3 normal, in vec3 view_dir,
-                         in vec4 tex_colour);
-float calculate_fog(in float fog_coord, in vec4 fog_colour, in float fog_start, in float fog_end, in float fog_density,
-                    in int fog_type);
+vec4 calculate_direction(in directional_light light, in material mat, in vec3 normal,
+                         in vec3 view_dir, in vec4 tex_colour);
+float calculate_fog(in float fog_coord, in vec4 fog_colour, in float fog_start,
+                    in float fog_end, in float fog_density, in int fog_type);
 
 // Directional light for the scene
 uniform directional_light light;
@@ -73,12 +73,10 @@ void main() {
   // Calculate fog coord
   // - convert from homogeneous
   // - ensure value is positive (we want the size of the value)
-
-
+  float fog_coord = abs(CS_position.z / CS_position.w);
   // Calculate fog factor
-
-
+  float fog_factor = calculate_fog(fog_coord, fog_colour, fog_start, fog_end, fog_density, fog_type);
   // Colour is mix between colour and fog colour based on factor
-
+  colour = mix(colour, fog_colour, fog_factor);
   // *********************************
 }
